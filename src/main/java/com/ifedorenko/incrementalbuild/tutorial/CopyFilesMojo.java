@@ -19,9 +19,11 @@ import io.takari.incrementalbuild.MessageSeverity;
 import io.takari.incrementalbuild.Resource;
 
 /**
- * An simple mojo that copies input files specified by from directory and includes/excludes patterns
- * to the specified output directory specified. Inputs that are 13 bytes long are considered invalid
- * and result in build failure.
+ * A simple mojo that copies input files specified by {@code from} source directory and
+ * corresponding {@code includes}/{@code excludes} patterns to the specified {@code to} output
+ * directory.
+ * <p>
+ * Inputs that are 13 bytes long are considered invalid and result in build failure.
  */
 @Mojo(name = "copy-resources", threadSafe = true)
 public class CopyFilesMojo extends AbstractMojo {
