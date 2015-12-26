@@ -137,7 +137,7 @@ Although coarse-grained incremental builder wrapper is easier to implement than 
 
 ### AggregatorBuildContext
 
-[image](aggregate-metadata.svg)
+[[aggregate-metadata.svg]]
 
 
 
