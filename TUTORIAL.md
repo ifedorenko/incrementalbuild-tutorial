@@ -1,7 +1,3 @@
----
-title: Document Center
----
-
 # Introduction to Takari incrementalbuild library 0.20.x
 
 Incremental build is a build performance optimization, which results in faster builds when the same source tree is repeatedly built multiple times with only small source changes between the builds.
@@ -130,9 +126,7 @@ Here is skeleton implementation of `Mojo#execute()` method. See [CopyFilesMojo](
 
 ### BasicBuildContext
 
-`BasicBuildContext` supports implementation of coarse-grained incremental builders. It is useful for builders that operate on inputs that are explicitly provided via builder configuration. 
-
-Here is skeleton `Mojo#execute()` method implementation.
+`BasicBuildContext` supports implementation of coarse-grained incremental builders. It is useful for builders that operate on inputs that are explicitly provided via builder configuration. Here is skeleton `Mojo#execute()` method implementation.
 
     // (1) register all inputs with the build context
     context.registerInput(input);
@@ -148,9 +142,7 @@ Here is skeleton `Mojo#execute()` method implementation.
 
 ---
 
-`BasicBuildContext` can also be used to implement better-than-nothing wrapper around builder logic that is not possible or not practical to implement as fine-grained incremental builders. 
-
-Here is skeleton `Mojo#execute()` method that shows how to provide coarse-grained incremental build wrapper for thirdparty `BlackBox` builder.
+`BasicBuildContext` can also be used to implement better-than-nothing wrapper around builder logic that is not possible or not practical to implement as fine-grained incremental builders. Here is skeleton `Mojo#execute()` method that shows how to provide coarse-grained incremental build wrapper for thirdparty `BlackBoxBuilder` builder.
 
     // (1) register all inputs with the build context
     for (File input : inputs) {
@@ -178,10 +170,53 @@ Although coarse-grained incremental builder wrapper is easier to implement than 
 
 ### AggregatorBuildContext
 
+`AggregatorBuildContext` supports fine-grained incremental aggregation of input metadata and coarse-grained aggregation of input contents.
+
+Input metadata aggregation is multi-step process.
+
+1. Builder registers all inputs to be aggreated with the build context.
+2. Each input that was changed since previous build is processed and input metadata is collected in intermediate persisted metadata map. 
+3. If collected metadata is different compared to the previous build, the metadata is then written to the output.
+
 ![input metadata aggregation](aggregate-metadata.svg)
+
+Collected metadata is a String->Serializable map, but the library does not make any further assumptions about map keys or values.
 
 ---
 
+Unlike other build context types, `AggregatorBuildContext` encapsulates overall aggregation implementation and builder-specific behaviour is provided with `MetadataAggregator<T>` callback interface. The interface has two methods
+
+* `Map<String, T> glean(File input)` gleans metadata from single input
+* `void aggregate(Output<File> output, Map<String, T> metadata)` generates aggregate output
+
+---
+
+Here is skeleton `Mojo#exectute()` method that aggregates inputs metadata
+
+```java
+InputSet inputs = context.newInputSet();
+    
+// (1) register inputs with the input set
+inputs.addInputs(from, includes, excludes);
+    
+inputs.aggregateIfNecessary(output, new MetadataAggregator<String>() {
+
+  // (2) glean metadata
+  @Override
+  public Map<String, String> glean(File input) throws IOException {
+    ...
+  }
+
+  // (3) generate aggregate output
+  @Override
+  public void aggregate(Output<File> output, Map<String, String> metadata) throws IOException {
+    ...
+  }
+
+}
+```
+
+---
 
 ## Testing
 
