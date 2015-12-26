@@ -2,26 +2,41 @@
 
 Incremental build is a build performance optimization, which results in faster builds when the same source tree is repeatedly built multiple times with only small source changes between the builds.
 
+---
+
 ## Why incrementalbuild is important
 
 * Single non-incremental builder taints entire build. Because the builder can leave obsolete outputs, the only way to guarantee correct build result is to run clean/full build.
 * In many/most cases, builder outputs are used as inputs for nother builders. For example, generated `.java` sources are used by compiler to generate `.class` files, which are in turn used to generate `.jar` file. Peformance implications of a non-incremental builder are usually far greater than the cost of running the builder itself.
 * Use of non-incremental builders makes the problem incompatible with m2e.
 
+---
+
 ## Basic concepts
+
+---
+
 A **builder** is a piece of build logic that processes zero, one or more input resources (or just "**inputs**") and generates one or more output resources (or "**outputs**"). For example, a java compiler is a builder that processes `.java` files and compile classpath as inputs and generates `.class` files as outputs. Another example is a builder that takes `.class` and other resources and generates a `.jar` file.
 
 Builder inputs are usually files on filesystem, but in some cases it may be convenient to use other input types, like zip-file entries identified by URL. Builder outputs are always files on filesystem.
 
+---
+
 An **incremental build** is a repeated build of a source tree when outputs of the previous build are still present on filesystem. Conversely, a **clean** build, is a build of a source tree when no outputs of the previous build are present on filesystem.
+
+---
 
 **Builder configuration** controls builder behaviour. For example, javac compiler `-target` parameter controls format of generated `*.class` outputs. Typically, builder configuration changes much less frequently than builder inputs.
 
 Bulder inputs are most often defined by builder configuration. Configuration can explicitly list all inputs one by one; or configuration can specify base directory and includes/excludes patterns used to locate inputs on filesystem.
 
+---
+
 Given the same inputs and configuration, a **reproducible builder** generates the same outputs. TODO: "reproducible builder" does not sound right, maybe we should call them "well-behaved builders"?. 
 
 Reproducible builder can skip generation of an output, if inputs that were used to generate the output did not change since the previous build.
+
+---
 
 An **incremental builder** is a reproducible builder that skips generation of outputs if their corresponding inputs did not change since the previous build.
 
