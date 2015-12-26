@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 # Introduction to Takari incrementalbuild library 0.20.x
 
 Incremental build is a build performance optimization, which results in faster builds when the same source tree is repeatedly built multiple times with only small source changes between the builds.
