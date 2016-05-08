@@ -224,3 +224,17 @@ inputs.aggregateIfNecessary(output, new MetadataAggregator<String>() {
 * No-change rebuild. Assert all outputs are carried over.
 * Rebuild after a new input was introduced. Assert new outputs are generated and the rest are carried over.
 * Rebuild after an input was removed. Assert orphaned outputs are removed and the rest are carried over.
+
+
+---
+
+<!--
+ | Copyright (c) 2015-2016 Igor Fedorenko
+ | All rights reserved. This program and the accompanying materials
+ | are made available under the terms of the Eclipse Public License v1.0
+ | which accompanies this distribution, and is available at
+ | http://www.eclipse.org/legal/epl-v10.html
+ |
+ | Contributors:
+ |      Igor Fedorenko - initial API and implementation
+-->
