@@ -75,6 +75,7 @@
         <extensions>true</extensions>
         <configuration>
           <source>1.8</source>
+          <proc>none</proc>
         </configuration>
       </plugin>
     </plugins>
